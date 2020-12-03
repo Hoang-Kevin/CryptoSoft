@@ -20,7 +20,7 @@ namespace CryptoSoft
                 }
                 else if (args[2] == "1")
                 {
-                    Encoder.Decrypt(args[0], args[1]);
+                    Encoder.Decrypt(args[0]);
                 }
 
             }

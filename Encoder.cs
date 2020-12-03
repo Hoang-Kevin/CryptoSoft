@@ -7,6 +7,8 @@ namespace CryptoSoft
 {
     public class Encoder
     {
+        public static string key = "lmskdjfglmsdj";
+        public static string binaryKey = "";
         public Encoder()
         {
 
@@ -16,8 +18,7 @@ namespace CryptoSoft
         {
             string text = "";
             string binaryText = "";
-            string key = "lmskdjfglmsdj";
-            string binaryKey = "";
+
 
             if (File.Exists(source))
             {
@@ -64,9 +65,51 @@ namespace CryptoSoft
         }
 
 
-        public static void Decrypt(string source, string destination)
+        public static void Decrypt(string source)
         {
+            string data = "";
+            string text = "";
+            string binary = "";
+            var result = new StringBuilder();
+            if (File.Exists(source))
+            {
+                StreamReader streamReader = new StreamReader(source);
+                while (!streamReader.EndOfStream)
+                {
+                    binary += streamReader.ReadLine();
+                }
+                streamReader.Close();
+                foreach (var character in key)
+                {
+                    int binValue = Convert.ToInt32(character);
+                    binaryKey += Convert.ToString(binValue, 2).PadLeft(8, '0');
+                }
 
+                for (int c = 0; c < binary.Length; c++)
+                {
+                    result.Append(binary[c] ^ binaryKey[c % binaryKey.Length]);
+                }
+                var stringBuilder = new StringBuilder();
+                for (int i = 0; i < result.Length; i++)
+                {
+                    if (i% 8 == 0)
+                        stringBuilder.Append(' ');
+                    stringBuilder.Append(result[i]);
+                }
+                string[] stringBytes = stringBuilder.ToString().Substring(1).Split(' ');
+                string decodeMessage = "";
+                Console.WriteLine(stringBytes[0]);
+                foreach (var item in stringBytes)
+                {
+                    var number = Convert.ToInt32(item, 2);
+                    decodeMessage += (char)number;
+
+                }
+                data = decodeMessage;
+                File.WriteAllText(source, "");
+                File.WriteAllText(source, data);
+
+            }
         }
     }
 }
